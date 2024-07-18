@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Test";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Test Enlace Molecular</h1>
+
+    <textarea id="txtCounter" class="form-control"></textarea>
+    <button id="btnCounter">Contar palabras</button>
+    <ul id="listWords"></ul>
+
+    <h3 id="noWord" style="display: none"></h3>
+
+
+</div>
+
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function() {
+
+            $('#btnCounter').click(function() {
+
+                submitCounter();
+            });
+        
+
+           function submitCounter () {
+                let text = $('#txtCounter').val();
+                let contenedor = $('#listWords');
+                let errorWord = $('#noWord');
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ContarPalabras", "Home")',
+                    data: { text: text },
+                    success: function(response) {
+                        if (response.status == 200) {
+                            contenedor.empty();
+                            errorWord.css("display", "none").text("");
+
+                            for (let i = 0; i < response.data.length; i++ ) {
+                                let estructura = `<li style="list-style:none"> ${response.data[i].nombre} = ${response.data[i].cantidad} </li>`
+                                contenedor.append(estructura)
+                            }
+
+                        } else {
+                            contenedor.empty();
+                            errorWord.text(response.message).css("display", "block");
+
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err)
+                    }
+                });
+
+           }
+
+        });
+
+
+
+    </script>
+
+
+}
