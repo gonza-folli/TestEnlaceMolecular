@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Test.Models;
+using System.Text.RegularExpressions;
 
 namespace Test.Controllers
 {
@@ -24,7 +25,10 @@ namespace Test.Controllers
             {
                 if (String.IsNullOrEmpty(text)) throw new Exception("No ingresó ninguna palabra");
 
-                List<string> palabras = text.Split(' ').ToList();
+
+                string textLimpio = Regex.Replace(text.Trim(), @"[^a-zA-Z0-9\sáéíóúüñÁÉÍÓÚÜÑ]", "").ToLower();
+
+                List<string> palabras = textLimpio.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
 
                 Dictionary<string, int> diccionarioPalabras = new Dictionary<string, int>();
 
